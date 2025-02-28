@@ -1,24 +1,23 @@
-def gc_tartalom(a: str, b: str, c: str): #Computing GC Content (nincs kesz kozelt sem)
+with open("rosalind_gc.txt", "r") as file:
+    data = file.read().strip()
 
-    A = a.count('C') + a.count('G')
-    B = b.count('C') + b.count('G')
-    C = c.count('C') + c.count('G')
+max_gc = 0.0
+max_id = ""
 
-    Aszaz = ( A / (len(a) / 100))
-    Bszaz = (B / (len(b) / 100))
-    Cszaz = (C / (len(c) / 100))
+entries = data.split('>')[1:]
 
-    if (Aszaz > Bszaz) and (Aszaz > Cszaz):
-        return (f'valami1 {round(Aszaz, 6)}')
+for entry in entries:
+    lines = entry.split('\n')
+    current_id = lines[0].strip()
+    sequence = ''.join(lines[1:])
+    gc = (sequence.count('G') + sequence.count('C'))
+    total = len(sequence)
+    if total == 0:
+        continue
     
-    elif (Bszaz > Aszaz) and (Bszaz > Cszaz):
-        return (f'valami2 {round(Bszaz, 6)}')
-    
-    elif (Cszaz > Bszaz) and (Cszaz > Aszaz):
-        return (f'valami3 {round(Cszaz, 6)}')
+    gc_percent = (gc / total) * 100
+    if gc_percent > max_gc:
+        max_gc = gc_percent
+        max_id = current_id
 
-if __name__ == '__main__':
-    print(gc_tartalom("CCTGCGGAAGATCGGCACTAGAATAGCCAGAACCGTTTCTCTGAGGCTTCCGGCCTTCCCTCCCACTAATAATTCTGAGG",
-                       "CCATCGGTAGCGCATCCTTAGTCCAATTAAGTCCCTATCCAGGCGCTCCGCCGAAGGTCTATATCCATTTGTCAGCAGACACGC",
-                         "CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGACTGGGAACCTGCGGGCAGTAGGTGGAAT"))
-
+    print(f'{max_id}\n{max_gc}')
